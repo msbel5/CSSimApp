@@ -1,0 +1,43 @@
+﻿@using System.Web.Optimization
+@using CSSimApp.BLL.Dtos
+@model CSSimApp.UI.ViewModels.MaterialFormViewModel
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title</h2>
+
+@using (Html.BeginForm("Save", "Materials"))
+{
+    @Html.ValidationSummary(true, "Please fix the following error/s.")
+    <div class="form-group">
+        @Html.LabelFor(m => m.Material.Name)
+        @Html.TextBoxFor(m => m.Material.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Material.Name)
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.Material.Flowery) Flowery?
+        </label>
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.Material.Thorny) Thorny?
+        </label>
+    </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.Material.Leafy) Leafy?
+        </label>
+    </div>
+
+    @Html.HiddenFor(c => c.Material.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,80 @@
+﻿@model IEnumerable<CSSimApp.BLL.Dtos.SizeDto>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Sizes</h2>
+<div class="container">
+    <div class="row justify-content-md-center">
+        @Html.ActionLink("New Size", "New", "Sizes", null, new { @class = "btn btn-primary col-md-3 offset-md-3" })
+    </div>
+</div>
+
+<p></p>
+
+<div class="table-responsive">
+    <table id="Size" class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            var table = $("#Size").DataTable({
+                ajax: {
+                    url: "/api/Sizes",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                        render: function(data, type, size) {
+                            return "<a href='/Sizes/details/" + size.id + "'>" + size.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data, type, size) {
+                            return "<a href='/Sizes/edit/" + size.id + "'>Edit</a>";
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data, type, size) {
+                            return "<button class='btn-link js-delete' data-Size-id=" +
+                                size.id +
+                                ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#Size").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you want to delete this Size?",
+                        function() {
+                            $.ajax({
+                                url: "/api/Sizes/" + button.attr("data-Size-id"),
+                                method: "DELETE",
+                                success: function() {
+                                    table.row(button.parents("tr")).remove().draw();
+                                }
+                            });
+                        });
+                });
+        });
+    </script>
+}
+

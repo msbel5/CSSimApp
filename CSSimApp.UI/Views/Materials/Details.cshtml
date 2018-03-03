@@ -1,0 +1,15 @@
+﻿@model CSSimApp.BLL.Dtos.MaterialDto
+@{
+    ViewBag.Title = Model.Name;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<h2>@Model.Name</h2>
+<ul>
+    <li>Flowery: @(Model.Flowery ? "Yes" : "No")</li>
+    <li>Thorny: @(Model.Thorny ? "Yes" : "No")</li>
+    <li>Leafy: @(Model.Leafy ? "Yes" : "No")</li>
+</ul>
+

@@ -1,0 +1,107 @@
+﻿@model IEnumerable<CSSimApp.BLL.Dtos.MaterialDto>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Materials</h2>
+<div class="container">
+<div class="row justify-content-md-center">
+    @Html.ActionLink("New Material", "New", "Materials", null, new { @class = "btn btn-primary col-md-3 offset-md-3" })
+</div>
+</div>
+
+<p></p>
+
+<div class="table-responsive">
+    <table id="Material" class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Flowery</th>
+            <th>Thorny</th>
+            <th>Leafly</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function() {
+            var table = $("#Material").DataTable({
+                ajax: {
+                    url: "/api/Materials",
+                    dataSrc: ""
+                },
+                columns: [
+                    {
+                        data: "name",
+                        render: function(data, type, material) {
+                            return "<a href='/materials/details/" + material.id + "'>" + material.name + "</a>";
+                        }
+                    },
+                    {
+                        data: "flowery",
+                        render: function(data, type, row) {
+                            return (data === true)
+                                ? "<span class='glyphicon glyphicon-ok'></span>"
+                                : "<span class='glyphicon glyphicon-remove'></span>";
+                        }
+                    },
+                    {
+                        data: "thorny",
+                        render: function (data, type, row) {
+                            return (data === true)
+                                ? "<span class='glyphicon glyphicon-ok'></span>"
+                                : "<span class='glyphicon glyphicon-remove'></span>";
+                        }
+                    },
+                    {
+                        data: "leafy",
+                        render: function(data, type, row) {
+                            return (data === true)
+                                ? '<span class="glyphicon glyphicon-ok"></span>'
+                                : '<span class="glyphicon glyphicon-remove"></span>';
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data, type, material) {
+                            return "<a href='/materials/edit/" + material.id + "'>Edit</a>";
+                        }
+                    },
+                    {
+                        data: "id",
+                        render: function(data, type, material) {
+                            return "<button class='btn-link js-delete' data-material-id=" +
+                                material.id +
+                                ">Delete</button>";
+                        }
+                    }
+                ]
+            });
+
+            $("#Material").on("click",
+                ".js-delete",
+                function() {
+                    var button = $(this);
+                    bootbox.confirm("Are you sure you want to delete this material?",
+                        function() {
+                            $.ajax({
+                                url: "/api/materials/" + button.attr("data-material-id"),
+                                method: "DELETE",
+                                success: function() {
+                                    table.row(button.parents("tr")).remove().draw();
+                                }
+                            });
+                        });
+                });
+        });
+    </script>
+}
+

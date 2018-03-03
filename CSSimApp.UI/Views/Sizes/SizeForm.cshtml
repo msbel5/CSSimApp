@@ -1,0 +1,28 @@
+﻿@using System.Web.Optimization
+@using CSSimApp.BLL.Dtos
+@model CSSimApp.UI.ViewModels.SizeFormViewModel
+@{
+    ViewBag.Title = Model.Title;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title</h2>
+
+@using (Html.BeginForm("Save", "Sizes"))
+{
+    @Html.ValidationSummary(true, "Please fix the following error/s.")
+    <div class="form-group">
+        @Html.LabelFor(m => m.Size.Name)
+        @Html.TextBoxFor(m => m.Size.Name, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.Size.Name)
+    </div>
+
+    @Html.HiddenFor(c => c.Size.Id)
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-primary">Save</button>
+}
+
+@section scripts
+{
+    @Scripts.Render("~/bundles/jqueryval")
+}
